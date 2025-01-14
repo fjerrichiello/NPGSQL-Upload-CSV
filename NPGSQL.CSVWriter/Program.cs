@@ -2,43 +2,54 @@
 
 using Npgsql;
 
+const string apiUrl = "http://localhost:5085/download-csv"; // Update the port if needed
+
 const string connectionString =
     "Host=localhost;Username=postgres;Password=postgres;Database=csvupload;IncludeErrorDetail=true;";
-const string inputFilePath = "data.csv";
-const string outputFilePath = "updated-data.csv"; // Path to the new CSV with the Id column
+const string downloadFilePath = "downloaded_books.csv";
 
-using (var reader1 = new StreamReader(inputFilePath))
-using (var writer1 = new StreamWriter(outputFilePath))
+const string outputFilePath1 = "data1.csv"; // Path to the new CSV with the Id column
+
+using (var httpClient = new HttpClient())
 {
-    string? line;
-    var id = 0;
+    var response = await httpClient.GetAsync(apiUrl, HttpCompletionOption.ResponseHeadersRead);
 
-    // Read and write the header
-    if ((line = reader1.ReadLine()) != null)
+    if (response.IsSuccessStatusCode)
     {
-        writer1.WriteLine($"Id,{line}");
-    }
+        // Open the response stream
+        await using var stream = await response.Content.ReadAsStreamAsync();
+        using var responseStreamReader = new StreamReader(stream);
+        await using var csvWriter1 = new StreamWriter(outputFilePath1);
+        string? line;
+        var id = 0;
 
-    // Process each subsequent line
-    while ((line = reader1.ReadLine()) != null)
-    {
-        id++;
-        writer1.WriteLine($"{id},{line}");
+        // Read and write the header
+        if ((line = responseStreamReader.ReadLine()) != null)
+        {
+            csvWriter1.WriteLine($"Id,{line}");
+        }
+
+        // Process each subsequent line
+        while ((line = responseStreamReader.ReadLine()) != null)
+        {
+            id++;
+            csvWriter1.WriteLine($"{id},{line}");
+        }
     }
 }
 
 
-using var connection = new NpgsqlConnection(connectionString);
+await using var connection = new NpgsqlConnection(connectionString);
 connection.Open();
 
 // Use COPY command
-using var writer =
+await using var writer =
     connection.BeginTextImport(
         """
                 COPY public."Books" ("Id", "AuthorId", "Title") FROM STDIN (FORMAT CSV, HEADER TRUE)
         """);
 
-using var reader = new StreamReader(outputFilePath);
+using var reader = new StreamReader(outputFilePath1);
 
 while (!reader.EndOfStream)
 {
