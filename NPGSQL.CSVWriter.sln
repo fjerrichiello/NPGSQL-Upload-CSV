@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NPGSQL.CSVWriter", "NPGSQL.CSVWriter\NPGSQL.CSVWriter.csproj", "{BB0C0380-F99D-46C1-94F6-B308A475AB5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NPGSQL.CSVWriter.Api", "NPGSQL.CSVWriter.Api\NPGSQL.CSVWriter.Api.csproj", "{47C4CB99-FBF8-4900-BAC2-E9ECC48A2738}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BB0C0380-F99D-46C1-94F6-B308A475AB5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB0C0380-F99D-46C1-94F6-B308A475AB5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB0C0380-F99D-46C1-94F6-B308A475AB5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB0C0380-F99D-46C1-94F6-B308A475AB5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47C4CB99-FBF8-4900-BAC2-E9ECC48A2738}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47C4CB99-FBF8-4900-BAC2-E9ECC48A2738}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47C4CB99-FBF8-4900-BAC2-E9ECC48A2738}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47C4CB99-FBF8-4900-BAC2-E9ECC48A2738}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
