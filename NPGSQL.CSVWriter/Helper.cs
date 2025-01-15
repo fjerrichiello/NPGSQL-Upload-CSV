@@ -4,6 +4,12 @@ namespace NPGSQL.CSVWriter;
 
 public static class Helper
 {
+    public const string ApiUrl = "http://localhost:5085/download-csv"; // Update the port if needed
+
+    public const string ConnectionString =
+        "Host=localhost;Username=postgres;Password=postgres;Database={0};IncludeErrorDetail=true;";
+
+
     public static string RemoveItemsByIndices(string input, List<int> indicesToRemove)
     {
         if (indicesToRemove.Count == 0)

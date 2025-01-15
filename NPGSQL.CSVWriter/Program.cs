@@ -3,11 +3,6 @@
 using Npgsql;
 using NPGSQL.CSVWriter;
 
-const string apiUrl = "http://localhost:5085/download-csv"; // Update the port if needed
-
-const string connectionString =
-    "Host=localhost;Username=postgres;Password=postgres;Database={0};IncludeErrorDetail=true;";
-
 List<UploadEntry> uploadEntries =
 [
     new UploadEntry(
@@ -24,65 +19,26 @@ List<UploadEntry> uploadEntries =
     )
 ];
 
-using (var httpClient = new HttpClient())
-{
-    var response = await httpClient.GetAsync(apiUrl);
-
-    if (response.IsSuccessStatusCode)
-    {
-        // Open the response stream
-        await using var stream = await response.Content.ReadAsStreamAsync();
-        using var responseStreamReader = new StreamReader(stream);
-
-        string? line;
-        var id = 0;
-
-        // Read and write the header
-        if ((line = responseStreamReader.ReadLine()) != null)
-        {
-            var newLine = $"Id,{line}";
-            foreach (var uploadEntry in uploadEntries)
-            {
-                uploadEntry.SetHeaders(newLine);
-                uploadEntry.WriteLine(newLine);
-            }
-        }
-
-        // Process each subsequent line
-        while ((line = responseStreamReader.ReadLine()) != null)
-        {
-            id++;
-            var newLine = $"{id},{line}";
-            foreach (var uploadEntry in uploadEntries)
-            {
-                uploadEntry.WriteLine(newLine);
-            }
-        }
-    }
-
-    foreach (var uploadEntry in uploadEntries)
-    {
-        uploadEntry.Writer.Close();
-    }
-}
+List<UploadEntry2> uploadEntries2 =
+[
+    new UploadEntry2(
+        "csvupload",
+        "data1.csv",
+        "Books",
+        []
+    ),
+    new UploadEntry2(
+        "csvupload2",
+        "data2.csv",
+        "OtherBooks",
+        [1]
+    )
+];
 
 
-foreach (var uploadEntry in uploadEntries)
-{
-    await using (var connection = new NpgsqlConnection(string.Format(connectionString, uploadEntry.DatabaseName)))
-    {
-        connection.Open();
+var implementation = new Implementation();
+var implementation2 = new Implementation2();
 
-        // Use COPY command
-        await using var writer =
-            connection.BeginTextImport(Helper.CreateCopyStatement(uploadEntry.TableName, uploadEntry.Headers));
+// await implementation.WriteCsvGeneration(uploadEntries);
 
-        using var reader = new StreamReader(uploadEntry.CsvName);
-
-        while (!reader.EndOfStream)
-        {
-            var line = await reader.ReadLineAsync();
-            await writer.WriteLineAsync(line);
-        }
-    }
-}
+await implementation2.WriteCsvGeneration(uploadEntries2);
