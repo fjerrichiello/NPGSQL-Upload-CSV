@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ConcurrencyPOC.Persistence.Models;
+namespace NPGSQL.CSVWriter.Api.Persistence.Models;
 
 public class Author
 {

@@ -1,6 +1,6 @@
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-using NPGSQL.CSVWriter.Persistence;
+using NPGSQL.CSVWriter.Api.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +12,7 @@ builder.Services.AddSwaggerGen();
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("ConcurrencyDatabase")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("CSVDatabase")));
 
 var app = builder.Build();
 

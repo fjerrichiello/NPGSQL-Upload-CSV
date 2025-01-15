@@ -1,0 +1,6 @@
+@NPGSQL.CSVWriter.OtherApi_HostAddress = http://localhost:5229
+
+GET {{NPGSQL.CSVWriter.OtherApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

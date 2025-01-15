@@ -1,15 +1,14 @@
-﻿using ConcurrencyPOC.Persistence.Models;
-using Microsoft.EntityFrameworkCore;
-using NPGSQL.CSVWriter.Persistence.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using NPGSQL.CSVWriter.Api.Persistence.Models;
 
-namespace NPGSQL.CSVWriter.Persistence;
+namespace NPGSQL.CSVWriter.Api.Persistence;
 
 public class ApplicationDbContext : DbContext
 {
     public virtual DbSet<Author> Authors { get; set; } = null!;
 
     public virtual DbSet<Book> Books { get; set; } = null!;
-
+    
     public ApplicationDbContext(
         DbContextOptions options) : base(options)
     {
