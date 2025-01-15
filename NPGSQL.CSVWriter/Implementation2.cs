@@ -1,6 +1,4 @@
-﻿using Npgsql;
-
-namespace NPGSQL.CSVWriter;
+﻿namespace NPGSQL.CSVWriter;
 
 public class Implementation2
 {
@@ -18,45 +16,30 @@ public class Implementation2
 
                 string? line;
                 var id = 0;
+                var first = true;
 
                 // Read and write the header
-                foreach (var uploadEntry in uploadEntries)
-                {
-                    uploadEntry.OpenConnection();
-                    await using (var command = new NpgsqlCommand(
-                                     $"TRUNCATE TABLE public.\"{uploadEntry.TableName}\" RESTART IDENTITY",
-                                     uploadEntry.Connection))
-                    {
-                        command.ExecuteNonQuery();
-                    }
-                }
-
-                if ((line = await responseStreamReader.ReadLineAsync()) != null)
-                {
-                    var newLine = $"Id,{line}";
-                    foreach (var uploadEntry in uploadEntries)
-                    {
-                        uploadEntry.SetHeaders(newLine);
-                        await uploadEntry.CreateWriter();
-                        uploadEntry.WriteLine(newLine);
-                    }
-                }
+                await uploadEntries.OpenConnectionsAndCleanTables();
 
                 // Process each subsequent line
                 while ((line = await responseStreamReader.ReadLineAsync()) != null)
                 {
+                    if (first)
+                    {
+                        var header = $"Id,{line}";
+                        uploadEntries.SetHeader(header);
+                        await uploadEntries.CreateWriter();
+                        uploadEntries.WriteLine(header);
+                        first = false;
+                        continue;
+                    }
+
                     id++;
                     var newLine = $"{id},{line}";
-                    foreach (var uploadEntry in uploadEntries)
-                    {
-                        uploadEntry.WriteLine(newLine);
-                    }
+                    uploadEntries.WriteLine(newLine);
                 }
 
-                foreach (var uploadEntry in uploadEntries)
-                {
-                    uploadEntry.Writer.Close();
-                }
+                uploadEntries.CloseConnections();
             }
         }
     }
